@@ -7,7 +7,9 @@ var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var less = require('gulp-less');
+var handlebars = require('gulp-handlebars');
 var wrap = require('gulp-wrap');
+var declare = require('gulp-declare');
 var watch = require('gulp-watch');
 var connect = require('gulp-connect');
 var header = require('gulp-header');
@@ -46,6 +48,18 @@ gulp.task('lint', function () {
     .pipe(jshint.reporter('jshint-stylish'));
 });
 
+function templates() {
+  return gulp
+    .src(['./src/main/template/*'])
+    .pipe(handlebars())
+    .pipe(wrap('Handlebars.template(<%= contents %>)'))
+    .pipe(declare({
+        namespace: 'Handlebars.templates',
+        noRedeclare: true,
+    }))
+    .on('error', log);
+}
+
 /**
  * Build a distribution
  */
@@ -60,7 +74,7 @@ function _dist() {
       ]),
       gulp
         .src(['./src/main/template/templates.js'])
-        .on('error', log)
+        .on('error',log)
     )
     .pipe(sourcemaps.init({loadMaps: true}))
     .pipe(order(['scripts.js', 'templates.js']))

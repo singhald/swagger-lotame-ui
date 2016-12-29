@@ -1,32 +1,21 @@
-{{#ifCond sampleJSON "||" sampleXML}}
-
-<div>
-<ul class="signature-nav">
-  <li><a class="description-link" href="#" data-sw-translate>Model</a></li>
-  <li><a class="snippet-link" href="#" data-sw-translate>Example Value</a></li>
-</ul>
-<div>
-
-<div class="signature-container">
-  <div class="description">
-      {{sanitize signature}}
-  </div>
-
-  <div class="snippet">
-  {{#if sampleJSON}}
-      <div class="snippet_json">
-        <pre><code>{{{escape sampleJSON}}}</code></pre>
-        {{#if isParam}}<small class="notice" data-sw-translate></small>{{/if}}
-      </div>
-  {{/if}}
-  {{#if sampleXML}}
-    <div class="snippet_xml">
-      <pre><code>{{{escape sampleXML}}}</code></pre>
-      {{#if isParam}}<small class="notice" data-sw-translate></small>{{/if}}
+{{#if sampleJSON}}
+<h4 class="sample-title" data-control data-toggle="collapse"
+    data-target="#sample-{{id}}">{{type}} Sample</h4>
+<div data-content class="collapse in" id="sample-{{id}}">
+    <div class="snippet">
+        <pre><code>{{sampleJSON}}</code></pre>
     </div>
-  {{/if}}
-  </div>
 </div>
+
+{{#if signature}}
+    <h4 class="schema-title collapsed" data-control data-toggle="collapse"
+        data-target="#schema-{{id}}">{{type}} Schema</h4>
+    <div data-content class="collapse" id="schema-{{id}}">
+        <div class="description">
+            {{{signature}}}
+        </div>
+    </div>
+{{/if}}
 {{else}}
     {{{escape signature}}}
-{{/ifCond}}
+{{/if}}

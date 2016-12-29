@@ -1,6 +1,7 @@
 {
   "name": "swagger-ui",
   "main": "dist/index.html",
+  "version": "2.2.8",
   "authors": [
     "Mohsen Azimi <me@azimi.me>"
   ],

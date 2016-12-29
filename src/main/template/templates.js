@@ -212,6 +212,28 @@ templates['main'] = template({"1":function(container,depth0,helpers,partials,dat
     + "    </h4>\n    </div>\n</div>\n";
 },"useData":true});
 templates['oauth2'] = template({"1":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return "<p>Authorization URL: "
+    + ((stack1 = (helpers.sanitize || (depth0 && depth0.sanitize) || helpers.helperMissing).call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.authorizationUrl : depth0),{"name":"sanitize","hash":{},"data":data})) != null ? stack1 : "")
+    + "</p>";
+},"3":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return "<p>Token URL: "
+    + ((stack1 = (helpers.sanitize || (depth0 && depth0.sanitize) || helpers.helperMissing).call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.tokenUrl : depth0),{"name":"sanitize","hash":{},"data":data})) != null ? stack1 : "")
+    + "</p>";
+},"5":function(container,depth0,helpers,partials,data) {
+    return "        <p>Please input username and password for password flow authorization</p>\n        <fieldset>\n            <div><label>Username: <input class=\"oauth-username\" type=\"text\" name=\"username\"></label></div>\n            <div><label>Password: <input class=\"oauth-password\" type=\"password\" name=\"password\"></label></div>\n        </fieldset>\n";
+},"7":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return "        <p>Setup client authentication."
+    + ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.requireClientAuthenticaiton : depth0),{"name":"if","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "</p>\n        <fieldset>\n            <div><label>Type:\n                <select class=\"oauth-client-authentication-type\" name=\"client-authentication-type\">\n                    <option value=\"none\" selected>None or other</option>\n                    <option value=\"basic\">Basic auth</option>\n                    <option value=\"request-body\">Request body</option>\n                </select>\n            </label></div>\n            <div class=\"oauth-client-authentication\" hidden>\n                <div><label>ClientId: <input class=\"oauth-client-id\" type=\"text\" name=\"client-id\"></label></div>\n                <div><label>Secret: <input class=\"oauth-client-secret\" type=\"text\" name=\"client-secret\"></label></div>\n            </div>\n        </fieldset>\n";
+},"8":function(container,depth0,helpers,partials,data) {
+    return "(Required)";
+},"10":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing;
 
   return "            <li>\n                <input class=\"oauth-scope\" type=\"checkbox\" data-scope=\""
@@ -223,9 +245,9 @@ templates['oauth2'] = template({"1":function(container,depth0,helpers,partials,d
     + "</label><br/>\n                <span class=\"api-scope-desc\">"
     + ((stack1 = (helpers.escape || (depth0 && depth0.escape) || alias2).call(alias1,(depth0 != null ? depth0.description : depth0),{"name":"escape","hash":{},"data":data})) != null ? stack1 : "")
     + "\n"
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.OAuthSchemeKey : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.OAuthSchemeKey : depth0),{"name":"if","hash":{},"fn":container.program(11, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                </span>\n            </li>\n";
-},"2":function(container,depth0,helpers,partials,data) {
+},"11":function(container,depth0,helpers,partials,data) {
     var stack1;
 
   return "                        ("
@@ -234,16 +256,21 @@ templates['oauth2'] = template({"1":function(container,depth0,helpers,partials,d
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing;
 
-  return "<div>\n    <h3 class=\"auth__title\">Select OAuth2.0 Scopes</h3>\n    <p>"
+  return "<div>\n    <h3 class=\"auth__title\">OAuth2.0</h3>\n    <p>"
     + ((stack1 = (helpers.sanitize || (depth0 && depth0.sanitize) || alias2).call(alias1,(depth0 != null ? depth0.description : depth0),{"name":"sanitize","hash":{},"data":data})) != null ? stack1 : "")
-    + "</p>\n    <p>Scopes are used to grant an application different levels of access to data on behalf of the end user. Each API may declare one or more scopes.\n        <a href=\"#\">Learn how to use</a>\n    </p>\n    <p><strong> "
-    + ((stack1 = (helpers.escape || (depth0 && depth0.escape) || alias2).call(alias1,(depth0 != null ? depth0.appName : depth0),{"name":"escape","hash":{},"data":data})) != null ? stack1 : "")
-    + " </strong> API requires the following scopes. Select which ones you want to grant to Swagger UI.</p>\n    <p>Authorization URL: "
-    + ((stack1 = (helpers.sanitize || (depth0 && depth0.sanitize) || alias2).call(alias1,(depth0 != null ? depth0.authorizationUrl : depth0),{"name":"sanitize","hash":{},"data":data})) != null ? stack1 : "")
-    + "</p>\n    <p>flow: "
+    + "</p>\n    "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.authorizationUrl : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\n    "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.tokenUrl : depth0),{"name":"if","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\n    <p>flow: "
     + ((stack1 = (helpers.escape || (depth0 && depth0.escape) || alias2).call(alias1,(depth0 != null ? depth0.flow : depth0),{"name":"escape","hash":{},"data":data})) != null ? stack1 : "")
-    + "</p>\n    <ul class=\"api-popup-scopes\">\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.scopes : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "</p>\n"
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isPasswordFlow : depth0),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.clientAuthentication : depth0),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "    <p><strong> "
+    + ((stack1 = (helpers.escape || (depth0 && depth0.escape) || alias2).call(alias1,(depth0 != null ? depth0.appName : depth0),{"name":"escape","hash":{},"data":data})) != null ? stack1 : "")
+    + " </strong> API requires the following scopes. Select which ones you want to grant to Swagger UI.</p>\n    <p>Scopes are used to grant an application different levels of access to data on behalf of the end user. Each API may declare one or more scopes.\n        <a href=\"#\">Learn how to use</a>\n    </p>\n    <ul class=\"api-popup-scopes\">\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.scopes : depth0),{"name":"each","hash":{},"fn":container.program(10, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "    </ul>\n</div>";
 },"useData":true});
 templates['operation'] = template({"1":function(container,depth0,helpers,partials,data) {
@@ -706,33 +733,31 @@ templates['response_content_type'] = template({"1":function(container,depth0,hel
     + "</select>\n";
 },"useData":true});
 templates['signature'] = template({"1":function(container,depth0,helpers,partials,data) {
-    var stack1, alias1=depth0 != null ? depth0 : {};
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
-  return "\n<div>\n<ul class=\"signature-nav\">\n  <li><a class=\"description-link\" href=\"#\" data-sw-translate>Model</a></li>\n  <li><a class=\"snippet-link\" href=\"#\" data-sw-translate>Example Value</a></li>\n</ul>\n<div>\n\n<div class=\"signature-container\">\n  <div class=\"description\">\n      "
-    + container.escapeExpression((helpers.sanitize || (depth0 && depth0.sanitize) || helpers.helperMissing).call(alias1,(depth0 != null ? depth0.signature : depth0),{"name":"sanitize","hash":{},"data":data}))
-    + "\n  </div>\n\n  <div class=\"snippet\">\n"
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.sampleJSON : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.sampleXML : depth0),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "  </div>\n</div>\n";
+  return "<h4 class=\"sample-title\" data-control data-toggle=\"collapse\"\n    data-target=\"#sample-"
+    + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
+    + "\">"
+    + alias4(((helper = (helper = helpers.type || (depth0 != null ? depth0.type : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"type","hash":{},"data":data}) : helper)))
+    + " Sample</h4>\n<div data-content class=\"collapse in\" id=\"sample-"
+    + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
+    + "\">\n    <div class=\"snippet\">\n        <pre><code>"
+    + alias4(((helper = (helper = helpers.sampleJSON || (depth0 != null ? depth0.sampleJSON : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"sampleJSON","hash":{},"data":data}) : helper)))
+    + "</code></pre>\n    </div>\n</div>\n\n"
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.signature : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
 },"2":function(container,depth0,helpers,partials,data) {
-    var stack1, alias1=depth0 != null ? depth0 : {};
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
-  return "      <div class=\"snippet_json\">\n        <pre><code>"
-    + ((stack1 = (helpers.escape || (depth0 && depth0.escape) || helpers.helperMissing).call(alias1,(depth0 != null ? depth0.sampleJSON : depth0),{"name":"escape","hash":{},"data":data})) != null ? stack1 : "")
-    + "</code></pre>\n        "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isParam : depth0),{"name":"if","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "\n      </div>\n";
-},"3":function(container,depth0,helpers,partials,data) {
-    return "<small class=\"notice\" data-sw-translate></small>";
-},"5":function(container,depth0,helpers,partials,data) {
-    var stack1, alias1=depth0 != null ? depth0 : {};
-
-  return "    <div class=\"snippet_xml\">\n      <pre><code>"
-    + ((stack1 = (helpers.escape || (depth0 && depth0.escape) || helpers.helperMissing).call(alias1,(depth0 != null ? depth0.sampleXML : depth0),{"name":"escape","hash":{},"data":data})) != null ? stack1 : "")
-    + "</code></pre>\n      "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isParam : depth0),{"name":"if","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "\n    </div>\n";
-},"7":function(container,depth0,helpers,partials,data) {
+  return "    <h4 class=\"schema-title collapsed\" data-control data-toggle=\"collapse\"\n        data-target=\"#schema-"
+    + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
+    + "\">"
+    + alias4(((helper = (helper = helpers.type || (depth0 != null ? depth0.type : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"type","hash":{},"data":data}) : helper)))
+    + " Schema</h4>\n    <div data-content class=\"collapse\" id=\"schema-"
+    + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
+    + "\">\n        <div class=\"description\">\n            "
+    + ((stack1 = ((helper = (helper = helpers.signature || (depth0 != null ? depth0.signature : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"signature","hash":{},"data":data}) : helper))) != null ? stack1 : "")
+    + "\n        </div>\n    </div>\n";
+},"4":function(container,depth0,helpers,partials,data) {
     var stack1;
 
   return "    "
@@ -741,7 +766,7 @@ templates['signature'] = template({"1":function(container,depth0,helpers,partial
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || helpers.helperMissing).call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.sampleJSON : depth0),"||",(depth0 != null ? depth0.sampleXML : depth0),{"name":"ifCond","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "");
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.sampleJSON : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(4, data, 0),"data":data})) != null ? stack1 : "");
 },"useData":true});
 templates['status_code'] = template({"1":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing;
@@ -756,13 +781,13 @@ templates['status_code'] = template({"1":function(container,depth0,helpers,parti
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing;
 
-  return "<td width='15%' class='code'>"
+  return "<td width='20px'><strong>"
     + ((stack1 = (helpers.escape || (depth0 && depth0.escape) || alias2).call(alias1,(depth0 != null ? depth0.code : depth0),{"name":"escape","hash":{},"data":data})) != null ? stack1 : "")
-    + "</td>\n<td class=\"markdown\">"
+    + "</strong></td>\n<td class=\"markdown\">"
     + ((stack1 = (helpers.escape || (depth0 && depth0.escape) || alias2).call(alias1,(depth0 != null ? depth0.message : depth0),{"name":"escape","hash":{},"data":data})) != null ? stack1 : "")
-    + "</td>\n<td width='50%'><span class=\"model-signature\" /></td>\n<td class=\"headers\">\n  <table>\n    <tbody>\n"
+    + "</td>\n<td class=\"headers\">\n  <table>\n    <tbody>\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.headers : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "    </tbody>\n  </table>\n</td>";
+    + "    </tbody>\n  </table>\n</td>\n";
 },"useData":true});
 })();} 
  /* jshint ignore:end */
