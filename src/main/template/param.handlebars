@@ -1,6 +1,5 @@
-<td class='code'><label for='{{{escape valueId}}}'>{{{escape name}}}</label></td>
-<td>
-
+<div class="param-property hide">{{escape name}}</div>
+<div class="param-property" data-label='{{escape name}}'>
 	{{#if isBody}}
 		{{#if isFile}}
 			<input type="file" name='{{{escape name}}}' id='{{{escape valueId}}}'/>
@@ -8,11 +7,11 @@
 		{{else}}
 			{{#if default}}
 				<div class="editor_holder"></div>
-				<textarea class='body-textarea' name='{{{escape name}}}' id='{{{escape valueId}}}'>{{{escape default}}}</textarea>
+				<textarea class='body-textarea' name='{{{escape name}}}' id='{{{escape valueId}}}' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{{escape name}}}'>{{{escape default}}}</textarea>
         <br />
         <div class="parameter-content-type" />
 			{{else}}
-				<textarea class='body-textarea' name='{{{escape name}}}' id='{{{escape valueId}}}'></textarea>
+				<textarea class='body-textarea' name='{{{escape name}}}' id='{{{escape valueId}}}' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{{escape name}}}'></textarea>
 				<div class="editor_holder"></div>
 				<br />
 				<div class="parameter-content-type" />
@@ -20,7 +19,10 @@
 		{{/if}}
 	{{else}}
 		{{#if isFile}}
-			<input type="file" name='{{{escape name}}}' id='{{{escape valueId}}}'/>
+            <label class="btn btn-primary" for=[{{{escape valueId}}}>
+			    <input type="file" name='{{{escape name}}}' id='{{{escape valueId}}}' style="display:none;"/>
+                Choose File
+            </label>
 			<div class="parameter-content-type" />
 		{{else}}
 			{{#renderTextParam this}}
@@ -28,9 +30,9 @@
 		{{/if}}
 	{{/if}}
 
-</td>
-<td class="markdown">{{{sanitize description}}}</td>
-<td>{{{escape paramType}}}</td>
-<td>
-	<span class="model-signature"></span>
-</td>
+        <div class="small-description">
+            {{#if type}}
+                <code class="code-signature">{{{escape type}}}</code>
+            {{/if}}
+            <div class="markdown">{{{escape description}}}</div>
+        </div>

@@ -1,6 +1,12 @@
 'use strict';
 
 SwaggerUi.Views.MainView = Backbone.View.extend({
+  events: {
+      'click .mobile-nav, [data-navigator]': 'clickSidebarNav',
+      'click [data-resource]': 'clickResource',
+      'click [data-tg-switch]': 'toggleToken',
+      'click #explore': 'showCustom'
+  },
   apisSorter : {
     alpha   : function(a,b){ return a.name.localeCompare(b.name); }
   },
@@ -61,7 +67,7 @@ SwaggerUi.Views.MainView = Backbone.View.extend({
       // Localhost override
       this.model.validatorUrl = null;
     } else {
-      this.model.validatorUrl = '//online.swagger.io/validator';
+      this.model.validatorUrl = window.location.protocoal+'//online.swagger.io/validator';
     }
 
     // JSonEditor requires type='object' to be present on defined types, we add it if it's missing
@@ -77,11 +83,6 @@ SwaggerUi.Views.MainView = Backbone.View.extend({
 
   render: function () {
     $(this.el).html(Handlebars.templates.main(this.model));
-    this.info = this.$('.info')[0];
-
-    if (this.info) {
-      this.info.addEventListener('click', this.onLinkClick, true);
-    }
 
     this.model.securityDefinitions = this.model.securityDefinitions || {};
 
@@ -97,8 +98,10 @@ SwaggerUi.Views.MainView = Backbone.View.extend({
         counter += 1;
       }
       resource.id = sanitizeHtml(id);
+      resource.nmbr=i;
       resources[id] = resource;
       this.addResource(resource, this.model.auths);
+      this.addSidebarHeader(resource, i);
     }
 
     $('.propWrap').hover(function onHover(){
@@ -106,6 +109,11 @@ SwaggerUi.Views.MainView = Backbone.View.extend({
     }, function offhover(){
       $('.optionsWrapper', $(this)).hide();
     });
+    if (window.location.hash.length === 0) {
+        var n = $(this.el).find('#resources_nav [data-resource]').first();
+        n.trigger('click');
+        $(window).scrollTop(0);
+    }
     return this;
   },
 
@@ -126,19 +134,83 @@ SwaggerUi.Views.MainView = Backbone.View.extend({
       auths: auths,
       swaggerOptions: this.options.swaggerOptions
     });
-    $('#resources', this.el).append(resourceView.render().el);
+    $('#resources', $(this.el)).append(resourceView.render().el);
+  },
+
+  addSidebarHeader: function (resource, i) {
+      resource.id=resource.id.replace(/\s/g,'_');
+      var sidebarView = new SwaggerUi.Views.SidebarHeaderView({
+          model: resource,
+          tagName: 'div',
+          className: function() {
+              return i==0?'active':'';
+          },
+          attributes: {
+              'data-resource': 'resource_'+ sanitizeHtml(resource.name),
+              'label': sanitizeHtml(resource.name)
+          },
+          router: this.router,
+          swaggerOptions: this.options.swaggerOptions
+      });
+      $('#resources_nav', $(this.el)).append(sidebarView.render().el);
   },
 
   clear: function(){
     $(this.el).html('');
   },
 
-  onLinkClick: function (e) {
-    var el = e.target;
+  clickSidebarNav: function(e) {
+      console.log('clickSidebarNav');
+      console.log(e);
+      $('.sticky-nav').toggleClass('nav-open')
+  },
 
-    if (el.tagName === 'A' && el.href && !el.target) {
-        e.preventDefault();
-        window.open(el.href, '_blank');
+  toggleToken: function (e) {
+    var t = $(".token-generator"),
+      tg = $("[data-tg-switch]");
+
+    t.toggleClass("hide");
+    t.hasClass("hide") ? tg.removeClass("active") : tg.addClass("active");
+    t.parents(".sticky-nav").trigger("mobile_nav:update")
+  },
+
+  closeToken: function (e) {
+    var t = $(".token-generator"),
+      tg = $("[data-tg-switch]");
+
+    t.addClass("hide");
+    tg.removeClass("active");
+    t.parents(".sticky-nav").trigger("mobile_nav:update")
+  },
+
+  openToken: function (e) {
+    var t = $(".token-generator"),
+      tg = $("[data-tg-switch]");
+
+    t.removeClass("hide");
+    tg.removeClass("active");
+    t.parents(".sticky-nav").trigger("mobile_nav:update")
+  },
+
+  showCustom: function(e){
+    if (e) {
+      e.preventDefault();
     }
+    this.trigger('update-swagger-ui', {
+      url: $('#input_baseUrl').val(),
+      apiKey: $('#input_apiKey').val()
+    });
+  },
+
+
+  clickResource: function(e) {
+      console.log('clickResource');
+      console.log(e);
+      if (!$(e.target).is('.item')){
+          var n = $(e.target).find('.item').first();
+          $('.sticky-nav').find('[data-resource].active').removeClass('active');
+          $(e.target).find('[data-resource]').first().addClass('active');
+          n.trigger('click');
+      }
   }
 });
