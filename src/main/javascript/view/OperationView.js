@@ -6,11 +6,12 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
   events: {
     'submit .sandbox'         : 'submitOperation',
     'click .submit'           : 'submitOperation',
-    'click .response_hider'   : 'hideResponse',
-    'click .toggleOperation'  : 'toggleOperationContent',
-    'mouseenter .api-ic'      : 'mouseEnter',
-    'dblclick .curl'          : 'selectText',
-    'change [name=responseContentType]' : 'showSnippet'
+    'click a.toggle-samples'  : 'toggleSamples',
+//    'click .response_hider'   : 'hideResponse',
+//    'click .toggleOperation'  : 'toggleOperationContent',
+//    'mouseenter .api-ic'      : 'mouseEnter',
+//    'dblclick .curl'          : 'selectText',
+//    'change [name=responseContentType]' : 'showSnippet'
   },
 
   initialize: function(opts) {
@@ -166,7 +167,7 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
     }
     signatureModel = null;
     produces = this.model.produces;
-    isXML = this.contains(produces, 'xml');
+    isXML = false && this.contains(produces, 'xml'); // MDS
     isJSON = isXML ? this.contains(produces, 'json') : true;
 
     if (this.model.successResponse) {
@@ -180,17 +181,23 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
           signatureModel = {
             sampleJSON: isJSON ? JSON.stringify(SwaggerUi.partials.signature.createJSONSample(value), void 0, 2) : false,
             isParam: false,
+            type: 'Response',
+            id: this.parentId+'_'+this.nickname+'_success',
             sampleXML: isXML ? SwaggerUi.partials.signature.createXMLSample(value.name, value.definition, value.models) : false,
             signature: SwaggerUi.partials.signature.getModelSignature(value.name, value.definition, value.models, value.modelPropertyMacro)
           };
         } else {
           signatureModel = {
+            type: 'Response',
+            id: this.parentId+'_'+this.nickname+'_success',
             signature: SwaggerUi.partials.signature.getPrimitiveSignature(value)
           };
         }
       }
     } else if (this.model.responseClassSignature && this.model.responseClassSignature !== 'string') {
       signatureModel = {
+        type: 'Response',
+        id: this.parentId+'_'+this.nickname,
         sampleJSON: this.model.responseSampleJSON,
         isParam: false,
         signature: this.model.responseClassSignature
@@ -202,7 +209,9 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
       responseSignatureView = new SwaggerUi.Views.SignatureView({
         model: signatureModel,
         router: this.router,
-        tagName: 'div'
+        tagName: 'div',
+        type: 'Response',
+        id: this.parentId + '_' + this.nickname + '_response'
       });
       $('.model-signature', $(this.el)).append(responseSignatureView.render().el);
     } else {
@@ -245,6 +254,9 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
     for (p = 0, len3 = ref4.length; p < len3; p++) {
       param = ref4[p];
       this.addParameter(param, contentTypeModel.consumes);
+      if (param.paramType === 'body' || param.in === 'body') {
+          this.addBodyModel(param);
+      }
     }
     ref5 = this.model.responseMessages;
     for (q = 0, len4 = ref5.length; q < len4; q++) {
@@ -274,6 +286,19 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
 
     this.showSnippet();
     return this;
+  },
+
+  addBodyModel: function(param){
+      if (param.type==='file') { return ; }
+      var bodySample = {
+          isParam: true,
+          sampleJSON: param.sampleJSON,
+          signature: param.signature,
+          type: 'Body',
+          id: this.parentId + '_' + this.nickname + '_body'
+      };
+      var signatureView = new SwaggerUi.Views.SignatureView({model: bodySample, tagName: 'div'});
+      $('.model-signature', $(this.el)).append(signatureView.render().el);
   },
 
   parseHeadersType: function (headers) {
@@ -348,7 +373,8 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
 
     var paramView = new SwaggerUi.Views.ParameterView({
       model: param,
-      tagName: 'tr',
+      className: 'parameter-item',
+      tagName: 'tr', // MDS
       readOnly: this.model.isReadOnly,
       swaggerOptions: this.options.swaggerOptions
     });
@@ -805,6 +831,26 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
     } else {
       return hljs.highlightBlock(response_body_el);
     }
+  },
+
+  toggleSamples: function(e) {
+      function o(t) {
+          if ("self" === t) {
+              var n = $(window).scrollTop();
+              return $(window).scrollTop(n);
+          }
+          return $(window).scrollTop(t);
+      }
+      var r = $('#resources'),
+          n = $(e.currentTarget);
+      r.toggleClass('samples-collapsed').addClass('is-collapsing');
+      n.find('.text').text('Collapse Samples');
+      r.hasClass('samples-collapsed') && n.find('.text').text('Show Samples');
+      setTimeout(function() {
+          var t = n.parents('.endpoint').first().offset().top;
+          r.removeClass('is-collapsing');
+          o(t);
+      }, 500);
   },
 
   toggleOperationContent: function (event) {

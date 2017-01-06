@@ -1,6 +1,10 @@
 'use strict';
 
 SwaggerUi.Views.MainView = Backbone.View.extend({
+  events: {
+      'click .mobile-nav, [data-navigator]': 'clickSidebarNav',
+      'click [data-resource]': 'clickResource'
+  },
   apisSorter : {
     alpha   : function(a,b){ return a.name.localeCompare(b.name); }
   },
@@ -61,7 +65,8 @@ SwaggerUi.Views.MainView = Backbone.View.extend({
       // Localhost override
       this.model.validatorUrl = null;
     } else {
-      this.model.validatorUrl = '//online.swagger.io/validator';
+      // Default validator
+      this.model.validatorUrl = window.location.protocol+'//online.swagger.io/validator';
     }
 
     // JSonEditor requires type='object' to be present on defined types, we add it if it's missing
@@ -98,7 +103,9 @@ SwaggerUi.Views.MainView = Backbone.View.extend({
       }
       resource.id = sanitizeHtml(id);
       resources[id] = resource;
+      resource.nmbr = i; // MDS needme?
       this.addResource(resource, this.model.auths);
+      this.addSidebarHeader(resource,i);
     }
 
     $('.propWrap').hover(function onHover(){
@@ -106,6 +113,10 @@ SwaggerUi.Views.MainView = Backbone.View.extend({
     }, function offhover(){
       $('.optionsWrapper', $(this)).hide();
     });
+    if (window.location.hash.length === 0) {
+        $(this.el).find('#resources_nav [data-resource]').first().trigger('click');
+//MDS        $(window).scrollTop(0);
+    }
     return this;
   },
 
@@ -128,10 +139,51 @@ SwaggerUi.Views.MainView = Backbone.View.extend({
     });
     $('#resources', this.el).append(resourceView.render().el);
   },
+    addSidebarToken: function(resource, i) {
+        resource.id = resource.id.replace(/\s/g, '_');
+        var sidebarView = new SwaggerUi.Views.SidebarHeaderView({
+            model: resource,
+            tagName: 'div',
+            className: function() { return (i===0?'active':'');},
+            attributes: {
+                'data-resource': 'resource_'+resource.name,
+                'label': resource.name
+            },
+            router: this.router,
+            swaggerOptions: this.options.SwaggerOptions
+        });
+        $('#token-generator',$(this.el)).append(sidebarView.render().el);
+    },
+    addSidebarHeader: function(resource, i) {
+        resource.id = resource.id.replace(/\s/g, '_');
+        var sidebarView = new SwaggerUi.Views.SidebarHeaderView({
+            model: resource,
+            tagName: 'div',
+            className: function() { return (i===0?'active':'');},
+            attributes: {
+                'data-resource': 'resource_'+resource.name,
+                'label': resource.name
+            },
+            router: this.router,
+            swaggerOptions: this.options.SwaggerOptions
+        });
+        $('#resources_nav',$(this.el)).append(sidebarView.render().el);
+    },
 
   clear: function(){
     $(this.el).html('');
   },
+    clickSidebarNav: function() {
+        $('.sticky-nav').toggleClass('nav-open');
+    },
+    clickResource: function(e) {
+        if (!$(e.target).is('.item')) {
+            $('.sticky-nav').find('[data-resource].active').removeClass('active');
+            $(e.target).find('[data-resource]').first().addClass('active');
+            $(e.target).find('.item').first().trigger('click');
+        }
+    },
+
 
   onLinkClick: function (e) {
     var el = e.target;

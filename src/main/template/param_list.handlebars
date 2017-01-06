@@ -1,19 +1,28 @@
-<td class='code{{#if required}} required{{/if}}'><label for='{{{escape valueId}}}'>{{{sanitize name}}}</label></td>
-<td>
-  <select {{#isArray this}} multiple="multiple"{{/isArray}} class="parameter {{#if required}} required {{/if}}" name="{{{sanitize name}}}" id="{{{escape valueId}}}">
+<div class="param-property hide" data-label="name">{{name}}</div>
+<div class="param-property" data-label='{{name}}'>
+    <div>
+        <select {{#isArray this}} multiple='multiple'{{/isArray}} class='parameter ui-form-control' name='{{name}}'  data-toggle="tooltip" data-placement="right" title="" data-original-title='{{name}}'>
+            {{#if required}}
+            {{else}}
+                {{#if default}}
+                {{else}}
+                        <option selected="" value=''></option>
+                {{/if}}
+            {{/if}}
+            {{#each allowableValues.descriptiveValues}}
+                {{#if isDefault}}
+                    <option selected="" value='{{value}}'>{{value}} (default)</option>
+                {{else}}
+                    <option value='{{value}}'>{{value}}</option>
+                {{/if}}
+            {{/each}}
+        </select>
+        <div class="small-description">
+            {{#if type}}
+                <code class="code-signature">{{type}}</code>
+            {{/if}}
+            <div class="markdown">{{description}}</div>
+        </div>
+    </div>
+</div>
 
-    {{#unless required}}
-      <option {{#unless hasDefault}}  selected="" {{/unless}} value=''></option>
-    {{/unless}}
-
-    {{#each allowableValues.descriptiveValues}}
-
-      <option {{#if isDefault}} selected=""  {{/if}}  value='{{{sanitize value}}}'> {{{sanitize value}}} {{#if isDefault}} (default) {{/if}} </option>
-
-    {{/each}}
-
-  </select>
-</td>
-<td class="markdown">{{#if required}}<strong>{{/if}}{{{description}}}{{#if required}}</strong>{{/if}}</td>
-<td>{{{escape paramType}}}</td>
-<td><span class="model-signature"></span></td>

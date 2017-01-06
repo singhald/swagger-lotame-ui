@@ -1,3 +1,17 @@
+<div id="swagger_sidebar">
+    <div class="sitcky-nav-placeholder">
+        <div class="sticky-nav">
+            <div class="mobile_nav">
+                <span class="select-label">API Reference: </span><span data-selected-value></span>
+            </div>
+            <div data-navigator>
+                <div data-resource="" label="Tools">
+                    <div class="item" data-tg-switch="">Swagger Resource <span class="status"></span></div>
+                </div>
+                <div id="resources_nav">
+                </div>
+            </div>
+            <p class="changes-disclaimer">
 <div class='info' id='api_info'>
   {{#if info}}
   <div class="info_title">{{{sanitize info.title}}}</div>
@@ -13,11 +27,11 @@
   {{#if info.license}}<div class='info_license'><a target="_blank" href='{{{escape info.license.url}}}'>{{{escape info.license.name}}}</a></div>{{/if}}
   {{/if}}
 </div>
-<div class='container' id='resources_container'>
-  <div class='authorize-wrapper'></div>
+</div></div></div>
+<div id='resources_container'>
+  <ul id='resources' class="samples-collapsed"></ul>
 
-  <ul id='resources'></ul>
-
+<!--
   <div class="footer">
     <h4 style="color: #999">[ <span style="font-variant: small-caps">base url</span>: {{{escape basePath}}}
     {{#if info.version}}
@@ -29,4 +43,5 @@
     {{/if}}
     </h4>
     </div>
+    -->
 </div>
